@@ -44,9 +44,6 @@ try:
     login_btn = wait.until(EC.element_to_be_clickable((By.XPATH, login_xpath)))
     login_btn.click()
 
-    # 登录后页面跳转等待，短sleep仅作缓冲（可删，等待会兜底）
-
-
     # 6. 一级分类列表按钮（核心报错点，加等待）
     first_xpath = "//div[contains(@class,'arco-menu-inline')]//div[contains(@class,'arco-menu-inline-header')]//span[normalize-space()='商品管理' and contains(@class,'arco-menu-title')]"
     first_btn = wait.until(EC.element_to_be_clickable((By.XPATH, first_xpath)))
@@ -58,9 +55,6 @@ try:
     second_btn.click()
 
     # 进入已上架页面
-
-    # driver.execute_script("document.body.style.zoom='0.8'")
-
     # 8. 点击一级已上架
     sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
     sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
@@ -70,8 +64,14 @@ try:
     sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
     sale2_btn.click()
 
-
-
+    # ========== * 滚动外层主表格，露出查看按钮 ==========
+    outer_table_scroll_loc = (By.XPATH,
+                              "//div[contains(@class,'arco-table-body') and not(ancestor::div[contains(@class,'arco-overlay-drawer')])]")
+    scroll_ele = wait.until(EC.presence_of_element_located(outer_table_scroll_loc))
+    sleep(0.2)
+    # 水平向右滚动，把操作列（查看）滚到可视区
+    driver.execute_script("arguments[0].scrollLeft += 200;", scroll_ele)
+    sleep(0.3)
 
     # 分发翻新
     # 10. 点击查看
@@ -82,17 +82,7 @@ try:
     drawer_mask = (By.XPATH, "//div[contains(@class,'arco-overlay-drawer')]")
     close_btn1_lic=(By.XPATH,"//div[contains(@class,'arco-overlay-drawer')]//div[contains(@class,'arco-drawer-header')]//div[@aria-label='Close' and contains(@class,'arco-drawer-close-btn')]")
 
-
     while True:
-        # ========== * 每次循环先滚动外层主表格，露出查看按钮 ==========
-        outer_table_scroll_loc = (By.XPATH,
-                                  "//div[contains(@class,'arco-table-body') and not(ancestor::div[contains(@class,'arco-overlay-drawer')])]")
-        scroll_ele = wait.until(EC.presence_of_element_located(outer_table_scroll_loc))
-        sleep(0.2)
-        # 水平向右滚动，把操作列（查看）滚到可视区
-        driver.execute_script("arguments[0].scrollLeft += 200;", scroll_ele)
-        sleep(0.3)
-        # ===============================================================
 
         # 【关键】每次循环重新查询列表，规避Stale元素
         look_list = wait.until(EC.visibility_of_all_elements_located((By.XPATH, look_xpath)))
@@ -238,7 +228,33 @@ try:
                     pass
                 continue
 
+        # ===================== 当前页全部处理完毕，处理分页翻页逻辑 =====================
+        print("当前页面所有数据处理完成，检查是否有下一页")
+        sleep(1.5)
 
+        try:
+            # 等待分页按钮出现
+            next_page_loc = (By.XPATH, "//span[contains(@class,'arco-pagination-item-next')]")
+            # 等待分页按钮出现
+            print("让我找一找下一页按钮...")
+            next_btn = wait.until(EC.presence_of_element_located(next_page_loc))
+            print("找到下一页按钮了！")
+            # 判断是否禁用（arco分页禁用会带aria-disabled="true"）
+            aria_dis = next_btn.get_attribute("class")
+            print("下一页class值：",aria_dis)
+            if 'arco-pagination-item-disabled' in aria_dis:
+                print("下一页按钮已禁用，无更多数据，全部处理完毕！")
+                break
+            # 可点击，执行翻页
+            driver.execute_script("arguments[0].click();", next_btn)
+            print("已点击下一页，等待表格加载新数据")
+            sleep(2.0)
+            # 等待表格body重新渲染完成
+            wait.until(EC.presence_of_element_located(outer_table_scroll_loc))
+        except TimeoutException:
+            # 找不到下一页按钮，无分页
+            print("未检测到下一页分页按钮，全部数据处理完毕！")
+            break
 
 
 except Exception as e:
