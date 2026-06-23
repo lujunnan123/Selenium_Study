@@ -111,10 +111,11 @@ try:
                 sleep(0.4)
 
                 # 【重点】移除tr[1]限制，匹配抽屉内任意复选框input
-                input_loc = (
-                    By.XPATH,
-                    "//div[contains(@class,'arco-drawer-body')]//input[contains(@class,'arco-checkbox-target')]"
-                )
+                # input_loc = (
+                #     By.XPATH,
+                #     "//div[contains(@class,'arco-drawer-body')]//input[contains(@class,'arco-checkbox-target')]"
+                # )
+                input_loc = (By.XPATH, "//div[contains(@class,'arco-overlay-drawer')]//tbody/tr[1]//input[contains(@class,'arco-checkbox-target')]")
                 check_input = wait.until(EC.presence_of_element_located(input_loc))
 
                 # 完整事件链，保证前端识别勾选
@@ -179,7 +180,7 @@ try:
                 )
                 modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
                 driver.execute_script("arguments[0].click();", modal_btn)
-                sleep(1.2)
+                sleep(0.8)
 
 
                 # 点击二次弹窗口中确定按钮
@@ -188,7 +189,7 @@ try:
                 print("二次弹窗开始渲染")
                 title2_root = wait.until(EC.visibility_of_element_located(modal2_title))
                 print("二次弹窗渲染完成")
-                sleep(1.2)
+                sleep(0.8)
 
                 # 5-1 点击二次弹窗口中确定按钮
 
@@ -202,7 +203,7 @@ try:
                 # JS点击防遮罩拦截
                 driver.execute_script("arguments[0].click();", confirm_btn)
                 print("二级弹窗确认按钮点击完成")
-                sleep(1.2)
+                sleep(0.8)
 
                 # 6-1 关闭所有弹窗print("查找关闭按钮")
                 print("关闭图标渲染c")
