@@ -136,7 +136,7 @@ class Youpin:
                 second_btn.click()
                 print("进入商品管理菜单")
 
-                # 筛选已上架
+                # 筛选-已上架
                 sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
                 sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
                 sale_btn.click()
@@ -145,6 +145,15 @@ class Youpin:
                 sale2_btn.click()
                 print("筛选【已上架】商品完成")
 
+                # 筛选-三角洲
+                sort2_xpath = "//span[normalize-space()='三角洲行动' and contains(@class,'arco-tag')]"
+                sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
+                sort2_btn.click()
+                print("筛选【三角洲】商品完成")
+
+
+
+                # 移动-查看
                 outer_table_scroll_loc = (By.XPATH, "//div[contains(@class,'arco-table-body') and not(ancestor::div[contains(@class,'arco-overlay-drawer')])]")
                 scroll_ele = wait.until(EC.presence_of_element_located(outer_table_scroll_loc))
                 sleep(0.2)
@@ -189,6 +198,7 @@ class Youpin:
                             sleep(0.5)
                             checked_status = driver.execute_script("return arguments[0].checked;", check_input)
                             print("复选框第一次选中状态：", checked_status)
+                            # 页面勾选，实际没有赋值——强制二次赋值
                             if not checked_status:
                                 print("-首次勾选失败，二次强制赋值-")
                                 driver.execute_script("""
@@ -198,6 +208,7 @@ class Youpin:
                                 sleep(0.3)
                                 checked_status = driver.execute_script("return arguments[0].checked;", check_input)
                                 print("二次勾选后状态：", checked_status)
+
                             if not checked_status:
                                 print("-勾选失败，关闭抽屉跳过本条-")
                                 close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
@@ -205,15 +216,32 @@ class Youpin:
                                 sleep(0.6)
                                 continue
 
+                            # 点击分发按钮，如果被禁用，则暂未上架，点击上架
                             submit_xpath = "//button[normalize-space()='分发翻新']"
                             submit_btn = wait.until(EC.presence_of_element_located((By.XPATH, submit_xpath)))
                             disabled_val = submit_btn.get_attribute("disabled")
                             print("分发按钮禁用状态", disabled_val)
                             if disabled_val == "true":
-                                print("-分发按钮禁用，跳过本条-")
+                                launch_xpath = "//button[normalize-space()='分发上架']"
+                                launch_btn = wait.until(EC.presence_of_element_located((By.XPATH, launch_xpath)))
+                                launch_btn.click()
+                                print("-该商品未上架，已重新上架")
+                                sleep(0.6)
+                                modal_xpath_str = (By.XPATH,
+                                                   "//div[contains(@class,'arco-modal-container')]//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
+                                modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
+                                driver.execute_script("arguments[0].click();", modal_btn)
+                                sleep(0.8)
+
                                 close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
                                 driver.execute_script("arguments[0].click();", close_drawer_btn)
-                                sleep(0.6)
+                                wait.until(EC.invisibility_of_element_located(modal_mask))
+                                wait.until(EC.invisibility_of_element_located(drawer_mask))
+                                sleep(0.5)
+                                # print("-分发按钮禁用，跳过本条-")
+                                # close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
+                                # driver.execute_script("arguments[0].click();", close_drawer_btn)
+                                # sleep(0.6)
                                 continue
                             driver.execute_script("arguments[0].click();", submit_btn)
 

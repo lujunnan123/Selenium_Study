@@ -64,6 +64,12 @@ try:
     sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
     sale2_btn.click()
 
+    # 筛选-三角洲
+    sort2_xpath = "//span[normalize-space()='三角洲行动' and contains(@class,'arco-tag')]"
+    sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
+    sort2_btn.click()
+    print("筛选【三角洲】商品完成")
+
     # ========== * 滚动外层主表格，露出查看按钮 ==========
     outer_table_scroll_loc = (By.XPATH,
                               "//div[contains(@class,'arco-table-body') and not(ancestor::div[contains(@class,'arco-overlay-drawer')])]")
@@ -160,11 +166,26 @@ try:
                 disabled_val = submit_btn.get_attribute("disabled")
                 print("分发按钮禁用状态",disabled_val)
                 if disabled_val == "true":
-                    print("关闭图标渲染")
+                    launch_xpath = "//button[normalize-space()='分发上架']"
+                    launch_btn = wait.until(EC.presence_of_element_located((By.XPATH, launch_xpath)))
+                    launch_btn.click()
+                    print("-该商品未上架，已重新上架")
+                    sleep(0.6)
+                    modal_xpath_str = (By.XPATH,
+                                       "//div[contains(@class,'arco-modal-container')]//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
+                    modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
+                    driver.execute_script("arguments[0].click();", modal_btn)
+                    sleep(0.8)
+
                     close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
                     driver.execute_script("arguments[0].click();", close_drawer_btn)
-                    print("关闭按钮点击完成")
-                    sleep(0.6)  # 加长缓冲，解决TimeoutException
+                    wait.until(EC.invisibility_of_element_located(modal_mask))
+                    wait.until(EC.invisibility_of_element_located(drawer_mask))
+                    sleep(0.5)
+                    # print("-分发按钮禁用，跳过本条-")
+                    # close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
+                    # driver.execute_script("arguments[0].click();", close_drawer_btn)
+                    # sleep(0.6)
                     continue
                 driver.execute_script("arguments[0].click();", submit_btn)
 
