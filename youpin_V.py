@@ -1,4 +1,4 @@
-# 三角洲游品翻新
+# 无畏契约-游品自动化翻新
 # 强制预导入chrome全套模块，解决打包缺失问题
 import selenium.webdriver.chrome
 import selenium.webdriver.chrome.webdriver
@@ -147,10 +147,10 @@ class Youpin:
                 print("筛选【已上架】商品完成")
 
                 # 筛选-三角洲
-                sort2_xpath = "//span[normalize-space()='三角洲行动' and contains(@class,'arco-tag')]"
+                sort2_xpath = "//span[normalize-space()='无畏契约' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
                 sort2_btn.click()
-                print("筛选【三角洲】商品完成")
+                print("筛选【无畏契约】商品完成")
 
 
 
