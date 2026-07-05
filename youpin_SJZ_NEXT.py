@@ -135,14 +135,14 @@ class Youpin:
         if self.is_running:
             messagebox.showinfo("提示", "[分发上架]自动化正在运行，请勿重复点击！")
             return
-        task_thread = threading.Thread(target=self.upEvent, daemon=True)
+        task_thread = threading.Thread(target=self.wupEvent, daemon=True)
         task_thread.start()
         self.is_running = True
     def wdel_task(self):
         if self.is_running:
             messagebox.showinfo("提示", "[分发删除]自动化正在运行，请勿重复点击！")
             return
-        task_thread = threading.Thread(target=self.delEvent, daemon=True)
+        task_thread = threading.Thread(target=self.wdelEvent, daemon=True)
         task_thread.start()
         self.is_running = True
 
