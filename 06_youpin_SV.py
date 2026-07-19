@@ -1,5 +1,6 @@
 # 三角洲&无畏 二合一版本 -游品自动化翻新 v2.1
-# 此版本--"螃蟹网暂不支持翻新"
+# 此版本--"螃蟹网暂不支持翻新" ++++  代码优化版
+
 # 强制预导入chrome全套模块，解决打包缺失问题
 import selenium.webdriver.chrome
 import selenium.webdriver.chrome.webdriver
@@ -146,7 +147,6 @@ class Youpin:
         task_thread.start()
         self.is_running = True
 
-
     # 分发删除按钮事件
     def delEvent(self):
         try:
@@ -196,26 +196,27 @@ class Youpin:
                 second_xpath = "//div[contains(@class,'arco-menu-inline-content')]//div[contains(@class,'arco-menu-item')]//span[normalize-space()='商品管理' and contains(@class,'arco-menu-item-inner')]"
                 second_btn = wait.until(EC.element_to_be_clickable((By.XPATH, second_xpath)))
                 second_btn.click()
-                print("进入商品管理菜单")
+                print("进入商品管理菜单--")
 
-                # 筛选-已上架
-                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
-                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
-                sale_btn.click()
-                sale2_xpath = "//span[contains(@class,'arco-dropdown-option-content')]//div[normalize-space()='已上架']"
-                sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
-                sale2_btn.click()
-                print("筛选【已上架】商品完成")
 
                 # 筛选-三角洲
                 sort2_xpath = "//span[normalize-space()='三角洲行动' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
                 sort2_btn.click()
-                print("筛选【三角洲行动】商品完成")
+                print("筛选【三角洲行动】商品完成--")
 
-                # 移动-查看
-                outer_table_scroll_loc = (By.XPATH,
-                                          "//div[contains(@class,'arco-table-body') and not(ancestor::div[contains(@class,'arco-overlay-drawer')])]")
+                # 筛选-已上架
+                sale_all_xpath = "//span[normalize-space()='全部' and contains(@class,'yp-status-filter__text-label')]"
+                sale_all_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_all_xpath)))
+                sale_all_btn.click()
+                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'yp-status-filter__text-label')]"
+                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
+                sale_btn.click()
+                print("筛选【已上架】商品完成--")
+
+                # 移动-查看     ### 此功能未起效
+                # outer_table_scroll_loc = (By.XPATH,"//div[contains(@class,'px-search-table__body')]//div[contains(@class,'arco-scrollbar-type-embed')]")
+                outer_table_scroll_loc = (By.XPATH,"//div[contains(@class,'px-search-table__body')]")
                 scroll_ele = wait.until(EC.presence_of_element_located(outer_table_scroll_loc))
                 sleep(0.2)
                 driver.execute_script("arguments[0].scrollLeft += 200;", scroll_ele)
@@ -414,20 +415,21 @@ class Youpin:
                 second_btn.click()
                 print("进入商品管理菜单")
 
-                # 筛选-已上架
-                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
-                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
-                sale_btn.click()
-                sale2_xpath = "//span[contains(@class,'arco-dropdown-option-content')]//div[normalize-space()='已上架']"
-                sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
-                sale2_btn.click()
-                print("筛选【已上架】商品完成")
 
                 # 筛选-三角洲
                 sort2_xpath = "//span[normalize-space()='三角洲行动' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
                 sort2_btn.click()
-                print("筛选【三角洲行动】商品完成")
+                print("筛选【三角洲行动】商品完成--")
+
+                # 筛选-已上架
+                sale_all_xpath = "//span[normalize-space()='全部' and contains(@class,'yp-status-filter__text-label')]"
+                sale_all_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_all_xpath)))
+                sale_all_btn.click()
+                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'yp-status-filter__text-label')]"
+                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
+                sale_btn.click()
+                print("筛选【已上架】商品完成--")
 
                 # 移动-查看
                 outer_table_scroll_loc = (By.XPATH,
@@ -622,20 +624,22 @@ class Youpin:
                 second_btn.click()
                 print("进入商品管理菜单")
 
-                # 筛选-已上架
-                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
-                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
-                sale_btn.click()
-                sale2_xpath = "//span[contains(@class,'arco-dropdown-option-content')]//div[normalize-space()='已上架']"
-                sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
-                sale2_btn.click()
-                print("筛选【已上架】商品完成")
 
-                # 筛选-三角洲
+                # 筛选-无畏契约
                 sort2_xpath = "//span[normalize-space()='无畏契约' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
                 sort2_btn.click()
-                print("筛选【无畏契约】商品完成")
+                print("筛选【无畏契约】商品完成--")
+
+                # 筛选-已上架
+                sale_all_xpath = "//span[normalize-space()='全部' and contains(@class,'yp-status-filter__text-label')]"
+                sale_all_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_all_xpath)))
+                sale_all_btn.click()
+                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'yp-status-filter__text-label')]"
+                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
+                sale_btn.click()
+                print("筛选【无畏契约-已上架】商品完成--")
+
 
                 # 移动-查看
                 outer_table_scroll_loc = (By.XPATH,
@@ -838,20 +842,20 @@ class Youpin:
                 second_btn.click()
                 print("进入商品管理菜单")
 
-                # 筛选-已上架
-                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'arco-tag')]"
-                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
-                sale_btn.click()
-                sale2_xpath = "//span[contains(@class,'arco-dropdown-option-content')]//div[normalize-space()='已上架']"
-                sale2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale2_xpath)))
-                sale2_btn.click()
-                print("筛选【已上架】商品完成")
-
-                # 筛选-三角洲
+                # 筛选-无畏契约
                 sort2_xpath = "//span[normalize-space()='无畏契约' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
                 sort2_btn.click()
-                print("筛选【无畏契约】商品完成")
+                print("筛选【无畏契约】商品完成--")
+
+                # 筛选-已上架
+                sale_all_xpath = "//span[normalize-space()='全部' and contains(@class,'yp-status-filter__text-label')]"
+                sale_all_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_all_xpath)))
+                sale_all_btn.click()
+                sale_xpath = "//span[normalize-space()='已上架' and contains(@class,'yp-status-filter__text-label')]"
+                sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
+                sale_btn.click()
+                print("筛选【无畏契约-已上架】商品完成--")
 
                 # 移动-查看
                 outer_table_scroll_loc = (By.XPATH,
