@@ -339,11 +339,13 @@ class Panzhi(tk.Tk):
                 if not auth_ok2:
                     print("##登录超时##")
                     driver.refresh()
-                    sleep(2)
+                    sleep(1)
                     driver.switch_to.window(panzhi_handle)
-                    sleep(2)
+                    sleep(1)
+                    driver.back()
+                    sleep(1)
                     driver.refresh()
-                    sleep(2)
+                    sleep(1)
                     continue
 
 
