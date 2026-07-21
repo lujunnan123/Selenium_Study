@@ -63,7 +63,7 @@ class Panzhi(tk.Tk):
             fg="white",
             font=("Arial", 12),
             relief=tk.FLAT,
-            command=self.start_handle
+            command=self.start_task
         )
         start_btn.pack(padx=5,pady=5)
 
@@ -128,7 +128,7 @@ class Panzhi(tk.Tk):
             all_handles = driver.window_handles
             new_handle = all_handles[-1]
             driver.switch_to.window(new_handle)
-            print(f"\n盼之主页初始化\n")
+            print(f"盼之主页初始化\n")
             driver.get("https://www.pzds.com/login?redirect=%2F")
 
             # 1.切换登录标签
@@ -197,11 +197,10 @@ class Panzhi(tk.Tk):
                 temp_look_list = wait.until(EC.visibility_of_all_elements_located((By.XPATH, spdetails_xpath)))
 
                 if len(temp_look_list) == errorNum:
-                    print(f"\n全部数据处理完毕")
+                    print(f"\n全部数据处理完毕！")
                     break
 
-                countnum +=1
-                print(f"\n========= 开始处理第{countnum}/{len(temp_look_list)}条，异常数据：{errorNum}条  =========\n")
+                print(f"\n========= 已处理：{countnum}条，异常数据：{errorNum}条  =========\n")
                 temp_look_list[errorNum].click()
                 print("进入【详情页面】——")
                 auth_ok = True
@@ -318,6 +317,7 @@ class Panzhi(tk.Tk):
                     drawer2_xpath = "//div[contains(@class,'n-modal')]"
                     WebDriverWait(driver,60).until(EC.invisibility_of_element_located((By.XPATH,drawer2_xpath)))
                     # sleep(5)
+                    countnum +=1
                     print(f"\n扫码登录成功！")
 
                 except TimeoutException:
@@ -363,6 +363,8 @@ class Panzhi(tk.Tk):
 
         except Exception as e:
             print(e)
+        except TimeoutException:
+            print("！超时！")
 
 
 
