@@ -1,3 +1,5 @@
+# 游品翻新初始版
+
 from time import sleep
 from selenium import webdriver
 from selenium.common import StaleElementReferenceException, TimeoutException, ElementClickInterceptedException

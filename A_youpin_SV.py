@@ -1,4 +1,4 @@
-# 三角洲&无畏 二合一版本 -游品自动化翻新 v2.1
+# 三角洲&无畏 二合一版本 -游品自动化翻新 v2.3
 # 此版本--"螃蟹网暂不支持翻新" ++++  代码优化版
 
 # 强制预导入chrome全套模块，解决打包缺失问题
@@ -49,7 +49,7 @@ class LogRedirector:
 class Youpin:
     def __init__(self, root):
         self.root = root
-        self.root.title("Youpin")
+        self.root.title("Youpin v2.3")
         self.root.geometry("600x400+630+80")
         self.is_running = False
 
@@ -298,19 +298,21 @@ class Youpin:
                                 continue
 
                             driver.execute_script("arguments[0].click();", submit_btn)
-                            # print("确定弹窗渲中....")
+                            print("确定弹窗渲中....")
                             modal_title = (By.XPATH,
-                                           "//div[contains(@class,'arco-modal-title-align-center') and normalize-space()='删除']")
+                                           "//div[contains(@class,'arco-modal-title-align-center') and normalize-space()='分发删除']")
                             title_root = wait.until(EC.visibility_of_element_located(modal_title))
-                            # print("确定弹窗渲染完成")
+                            print("确定弹窗渲染完成")
 
                             # 确定按钮点击
                             sleep(0.6)
                             modal_xpath_str = (By.XPATH,
-                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
-                            # print("确定按钮渲中....")
+                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确认删除']")
+
+
+                            print("确定按钮渲中....")
                             modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
-                            # print("确定按钮渲染完毕")
+                            print("确定按钮渲染完毕")
                             driver.execute_script("arguments[0].click();", modal_btn)
                             print(f"\n分发删除成功!")
                             sleep(0.8)
@@ -517,7 +519,7 @@ class Youpin:
                             launch_btn.click()
                             sleep(0.6)
                             modal_xpath_str = (By.XPATH,
-                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
+                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确认上架']")
                             modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
                             driver.execute_script("arguments[0].click();", modal_btn)
                             sleep(0.8)
@@ -727,14 +729,14 @@ class Youpin:
                             driver.execute_script("arguments[0].click();", submit_btn)
                             # print("确定弹窗渲中....")
                             modal_title = (By.XPATH,
-                                           "//div[contains(@class,'arco-modal-title-align-center') and normalize-space()='删除']")
+                                           "//div[contains(@class,'arco-modal-title-align-center') and normalize-space()='分发删除']")
                             title_root = wait.until(EC.visibility_of_element_located(modal_title))
                             # print("确定弹窗渲染完成")
 
                             # 确定按钮点击
                             sleep(0.6)
                             modal_xpath_str = (By.XPATH,
-                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
+                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确认删除']")
                             # print("确定按钮渲中....")
                             modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
                             # print("确定按钮渲染完毕")
@@ -943,7 +945,7 @@ class Youpin:
                             launch_btn.click()
                             sleep(0.6)
                             modal_xpath_str = (By.XPATH,
-                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确定']")
+                                               "//div[contains(@class,'arco-modal-footer')]//button[normalize-space()='确认上架']")
                             modal_btn = wait.until(EC.element_to_be_clickable(modal_xpath_str))
                             driver.execute_script("arguments[0].click();", modal_btn)
                             sleep(0.8)
