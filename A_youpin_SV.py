@@ -1,4 +1,4 @@
-# 三角洲&无畏 二合一版本 -游品自动化翻新 v2.4
+# 三角洲&无畏&和平  -游品自动化翻新 v2.5
 # 此版本--"螃蟹网支持翻新" ++++
 
 # 强制预导入chrome全套模块，解决打包缺失问题
@@ -81,6 +81,17 @@ class Youpin:
             font=("微软雅黑", 10, "bold"),
             relief=tk.FLAT,
             command=lambda:self.start_task('无畏契约')
+        )
+        run_btn.pack(pady=5,side=tk.LEFT,padx=5)
+        # 和平翻新按钮
+        run_btn = tk.Button(
+            btn_frame,
+            text="和平翻新",
+            bg="#F2C55C",
+            fg="#fff",
+            font=("微软雅黑", 10, "bold"),
+            relief=tk.FLAT,
+            command=lambda:self.start_task('和平精英')
         )
         run_btn.pack(pady=5,side=tk.LEFT,padx=5)
 
