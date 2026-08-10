@@ -1,4 +1,4 @@
-# 三角洲&无畏&和平  -游品自动化翻新 v2.5
+# 三角洲&无畏&和平  -游品自动化翻新 v3.1
 # 此版本--"螃蟹网支持翻新" ++++
 
 # 强制预导入chrome全套模块，解决打包缺失问题
@@ -69,7 +69,7 @@ class Youpin:
             fg="#fff",
             font=("微软雅黑", 10, "bold"),
             relief=tk.FLAT,
-            command=lambda:self.start_task('三角洲行动')
+            command=lambda:self.start_task('三角洲行动','小新网游')
         )
         run_btn.pack(pady=5,side=tk.LEFT)
         # 无畏翻新按钮
@@ -80,7 +80,7 @@ class Youpin:
             fg="#fff",
             font=("微软雅黑", 10, "bold"),
             relief=tk.FLAT,
-            command=lambda:self.start_task('无畏契约')
+            command=lambda:self.start_task('无畏契约','小新网游')
         )
         run_btn.pack(pady=5,side=tk.LEFT,padx=5)
         # 和平翻新按钮
@@ -91,7 +91,7 @@ class Youpin:
             fg="#fff",
             font=("微软雅黑", 10, "bold"),
             relief=tk.FLAT,
-            command=lambda:self.start_task('和平精英')
+            command=lambda:self.start_task('和平精英','派大星')
         )
         run_btn.pack(pady=5,side=tk.LEFT,padx=5)
 
@@ -107,17 +107,17 @@ class Youpin:
         self.log_redirect = LogRedirector(self.log_text, self.root)
         sys.stdout = self.log_redirect
 
-    def start_task(self,name):
+    def start_task(self,name,store_name):
         if self.is_running:
             messagebox.showinfo("提示", "[分发翻新]自动化正在运行，请勿重复点击！")
             return
-        task_thread = threading.Thread(target=self.upEvent,args=(name,), daemon=True)
+        task_thread = threading.Thread(target=self.upEvent,args=(name,store_name), daemon=True)
         task_thread.start()
         self.is_running = True
 
 
     # 分发翻新按钮事件
-    def upEvent(self,name):
+    def upEvent(self,name,store_name):
         try:
             print("===== 分发上架自动化程序启动，正在打开浏览器 =====")
             # Chrome配置
@@ -167,7 +167,6 @@ class Youpin:
                 second_btn.click()
                 print("进入商品管理菜单")
 
-
                 # 筛选-三角洲/无畏
                 sort2_xpath = f"//span[normalize-space()='{name}' and contains(@class,'arco-tag')]"
                 sort2_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sort2_xpath)))
@@ -205,7 +204,7 @@ class Youpin:
                         break
 
                     for idx in range(len(look_list)):
-                        print(f"\n===== 开始处理第 {idx + 1}/{len(look_list)} 条 =====")
+                        print(f"\n===== 开始处理第 {idx + 1}/{len(look_list)} 条 =====\n")
                         try:
                             temp_look_list = wait.until(EC.visibility_of_all_elements_located((By.XPATH, look_xpath)))
                             item = temp_look_list[idx]
@@ -217,10 +216,30 @@ class Youpin:
                             wait.until(EC.visibility_of_element_located((By.XPATH, drawer_x)))
                             sleep(0.4)
 
-                            input_loc = (By.XPATH,
-                                         "//div[contains(@class,'arco-drawer-container')]//tbody/tr[1]//input[contains(@class,'arco-checkbox-target')]")
-                            check_input = wait.until(EC.presence_of_element_located(input_loc))
-                            print(f"\n已获取选中框元素")
+                            # 获取所有列表中的所有店铺名称
+                            list_tds_Xpath = "//div[contains(@class,'arco-drawer-container')]//tbody//tr[not(contains(@class,'arco-table-tr-empty'))]/td[3]/span"
+                            tds_list = wait.until(EC.visibility_of_all_elements_located((By.XPATH, list_tds_Xpath)))
+                            click_idx = 0
+                            for idx in range(len(tds_list)):
+                                # 匹配上架店铺
+                                if store_name == tds_list[idx].text:
+                                    click_idx = idx+1
+                                    print(click_idx,tds_list[idx].text)
+
+                            if click_idx == 0:
+                                # 关闭弹窗
+                                close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
+                                driver.execute_script("arguments[0].click();", close_drawer_btn)
+                                wait.until(EC.invisibility_of_element_located(modal_mask))
+                                wait.until(EC.invisibility_of_element_located(drawer_mask))
+                                sleep(0.5)
+                                break
+
+
+                            input_loc_Xpath =  f"//div[contains(@class,'arco-drawer-container')]//tbody/tr[{click_idx}]//label[contains(@class,'arco-checkbox')]"
+
+                            check_input = wait.until(EC.element_to_be_clickable((By.XPATH, input_loc_Xpath)))
+
                             js_check = """
                                    const input = arguments[0];
                                    input.checked = true;
@@ -230,7 +249,7 @@ class Youpin:
                                    """
                             driver.execute_script(js_check, check_input)
                             sleep(0.5)
-                            checked_status = driver.execute_script("return arguments[0].checked;", check_input)
+                            checked_status = driver.execute_script(f"return arguments[0].checked;", check_input)
                             print(f"\n复选框第一次选中状态：", checked_status)
                             # 页面勾选，实际没有赋值——强制二次赋值
                             if not checked_status:
@@ -246,7 +265,7 @@ class Youpin:
                             if not checked_status:
                                 print(f"\n勾选失败，关闭抽屉跳过本条-")
                                 close_drawer_btn = wait.until(EC.presence_of_element_located(close_btn1_lic))
-                                driver.execute_script("arguments[0].click();", close_drawer_btn)
+                                driver.execute_script(f"arguments[{click_idx}].click();", close_drawer_btn)
                                 sleep(0.6)
                                 continue
 
