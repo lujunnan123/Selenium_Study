@@ -224,7 +224,7 @@ class Youpin:
                                 # 匹配上架店铺
                                 if store_name == tds_list[idx].text:
                                     click_idx = idx+1
-                                    print(click_idx,tds_list[idx].text)
+                                    print("翻新店铺：",tds_list[idx].text)
 
                             if click_idx == 0:
                                 # 关闭弹窗
