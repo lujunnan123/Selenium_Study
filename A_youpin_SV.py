@@ -1,4 +1,4 @@
-# 三角洲&无畏&和平  -游品自动化翻新 v3.1
+# 三角洲&无畏&和平  -游品自动化翻新 v3.2
 # 此版本--"螃蟹网支持翻新" ++++
 
 # 强制预导入chrome全套模块，解决打包缺失问题
@@ -10,6 +10,7 @@ import selenium.webdriver.chrome.service
 from time import sleep
 from selenium import webdriver
 from selenium.common import StaleElementReferenceException, TimeoutException, ElementClickInterceptedException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -49,7 +50,7 @@ class LogRedirector:
 class Youpin:
     def __init__(self, root):
         self.root = root
-        self.root.title("Youpin v2.4")
+        self.root.title("Youpin v3.2")
         self.root.geometry("600x400+630+80")
         self.is_running = False
         # 置顶
@@ -181,6 +182,20 @@ class Youpin:
                 sale_btn = wait.until(EC.element_to_be_clickable((By.XPATH, sale_xpath)))
                 sale_btn.click()
                 print("筛选【已上架】商品完成--")
+
+                # 筛选-时间
+                sort_time_xpath = "//div[contains(@class,'yp-expand-form-selector')]/span"
+                sort_time_ele =wait.until(EC.element_to_be_clickable((By.XPATH, sort_time_xpath)))
+                sort_time_ele.click()
+
+                # 筛选-剔除时间筛选
+                date_select_xpath= "//div[contains(@class,'arco-picker-range')]//input[contains(@placeholder,'入库开始时间')]"
+                date_select_elem =driver.find_element(By.XPATH, date_select_xpath)
+                ActionChains(driver).move_to_element(date_select_elem).perform()
+                select_del_xpath = "//div[contains(@class,'yp-expand-form-selector')]//span[contains(@class,'arco-picker-clear-icon')]"
+                select_del_btn = wait.until(EC.element_to_be_clickable((By.XPATH, select_del_xpath)))
+                select_del_btn.click()
+                print("已剔除筛选--")
 
                 # 移动-查看
                 outer_table_scroll_loc = (By.XPATH,
